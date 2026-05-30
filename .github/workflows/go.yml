@@ -1,6 +1,5 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
 
 on:
@@ -21,8 +20,18 @@ jobs:
       with:
         go-version: '1.21'
 
-    - name: Install FFmpeg
-      run: sudo apt-get update && sudo apt-get install -y ffmpeg
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg libopus-dev libvpx-dev pkg-config
+
+    - name: Install ntgcalls
+      run: |
+        git clone https://github.com/iyear/ntgcalls.git
+        cd ntgcalls
+        mkdir build && cd build
+        cmake .. && make && sudo make install
+        cd ../..
 
     - name: Build
       run: go build -v ./...
